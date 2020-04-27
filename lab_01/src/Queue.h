@@ -1,93 +1,118 @@
+#ifndef Queue_h
+#define Queue_h
 
 #include <iostream>
 using namespace std;
 
-template <class T>
 struct Queue
 {
-
-	int* mass;
-	int size;
-	
-
-
-	Queue(int nsize)
+	explicit Queue(int nsize)
 	{
-		mass = new int[nsize];
-		size = nsize;
-		for (int i = 0; i < size; i++)
+		if (nsize < 0)
 		{
-			cin >> mass[i];
-			cout << ' ';
+			throw invalid_argument("Neverno");
+		}
+		else
+		{
+			size = nsize;
+			mass = new int[nsize];
 		}
 	};
-	void QueueOut();
-	void QueuePush( int b1);
-	void QueuePop();
-	short QueuePeek();
-	short QueueCount();
-	void QueuePositive();
-	void QueueRange(int d1, int f1);
-	void QueueComparison(int*& masss, int& size2, int& size);
 
+	Queue()
+	{
+		size = 0;
+		mass = new int[size];
+	}
+
+	~Queue()
+	{
+		delete[] mass;
+	}
+
+	void Out();
+	void Push(int b1);
+	void Pop();
+	int Peek();
+	int Count();
+	void Negative();
+	void Range(int d1, int f1);
+
+
+	bool operator<(const Queue& b); // comparison functions
+	bool operator>(const Queue& b);
+	bool operator==(const Queue& b);
+	bool operator!=(const Queue& b);
+	bool operator<=(const Queue& b);
+	bool operator>=(const Queue& b);
+
+private:
+	int* mass{ nullptr };
+	size_t size{ 0 };
 
 };
-template <typename T>
-void Queue<T>::QueueOut()
+
+void Queue::Out()
 {
-	for (int i = 0; i < size; i++)
+	for (size_t i = 0; i < size; i++)
 	{
 		cout << mass[i] << " ";
 	}
 	cout << endl;
 };
-template <typename T>
-void Queue <T>::QueuePush( int b1)
+void Queue::Push( int b1)
 {
-	int* newMass = new int[size + 1];
-	for (int i = 0; i < size; i++)
+	auto* newMass = new int[size + 1];
+	for (size_t i = 0; i < size; i++)
 	{
-		newMass[i + 1] = mass[i];
+		newMass[i] = mass[i];
 	}
-	newMass[0] = b1;
+	newMass[size] = b1;
 	size++;
 	delete[] mass;
 	mass = newMass;
 }
-template <typename T>
-void Queue <T>::QueuePop()
+
+void Queue::Pop()
 {
-	size--;
-	int* newMass = new int[size];
-	for (int i = 0; i < size; i++)
+	if (size <= 0)
 	{
-		newMass[i] = mass[i];
+		throw out_of_range("Neverno");
 	}
-	delete[] mass;
-	mass = newMass;
+	else
+	{
+		size--;
+		auto* newMass = new int[size];
+		for (size_t i = 0; i < size; i++)
+		{
+			newMass[i] = mass[i + 1];
+		}
+		delete[] mass;
+		mass = newMass;
+	}
 }
-template <typename T>
-short Queue <T>::QueuePeek()
+
+int Queue::Peek()
 {
-	return mass[size - 1];
+	return mass[0];
 }
-template <typename T>
-short Queue <T>::QueueCount()
+
+int Queue::Count()
 {
 	return size;
 }
-template <typename T>
-void Queue <T>::QueuePositive()
+
+void Queue::Negative()
 {
-	int s = 0;
-	int z = 0;
-	for (int i = 0; i < size; i++)
+	size_t s = 0;
+	size_t z = 0;
+	for (size_t i = 0; i < size; i++)
 	{
 		if (mass[i] < 0) s++;
 	}
 
-	int* newMass = new int[size - s];
-	for (int i = 0; i < size; i++)
+	auto* newMass = new int[size - s];
+	for (size_t i = 0; i < size; i++)
 	{
 
 		if (mass[i] > 0)
@@ -100,33 +125,130 @@ void Queue <T>::QueuePositive()
 	mass = newMass;
 	size = size - s;
 }
-template <typename T>
-void Queue <T>::QueueRange(int d1, int f1)
-{
-	int z = 0;
-	size = (f1 - d1 + 1);
-	int* newMass = new int[size];
-	for (int i = d1 - 1; i < size; i++)
-	{
 
-		newMass[z] = mass[i];
-		z++;
+void Queue::Range(int left, int right)
+{
+	size_t RangeCount = 0;
+	size_t z = 0;
+	for (size_t i = 0; i < size; i++)
+	{
+		if ((mass[i] >= left) && (mass[i] <= right))
+		{
+			RangeCount++;
+		}
+	}
+	size -= RangeCount;
+	auto* newMass = new int[size];
+	for (size_t i = 0; i < size; i++)
+	{
+		if ((mass[i + z] >= left) && (mass[i + z] <= right))
+		{
+			z++;
+			i--;
+		}
+		else
+			newMass[i] = mass[i + z];
 
 	}
 	delete[] mass;
 	mass = newMass;
 }
-template <typename T>
-void Queue <T>::QueueComparison(int*& masss, int& size2, int& size)
+
+bool Queue::operator<(const Queue& b)
 {
-	int q = -1;
-	int w = -1;
-	if (size > size2) size = size2;
-	for (int i = size - 1; i > -1; i--)
-		if (mass[i] > masss[i]) q = i;
-		else if (mass[i] < masss[i]) w = i;
-	if ((q == -1) and (w == -1)) cout << "Ravno";
-	else if (q > w) cout << "1 bolshe";
-	else cout << "2 bolshe";
+	if (size > b.size)
+	{
+		size_t ss = 0;
+
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return true;
+
+			else if (mass[ss] > b.mass[ss]) return false;
+
+			ss++;
+
+		} while (ss < b.size);
+	}
+	else if (size <= b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return true;
+
+			if (mass[ss] > b.mass[ss]) return false;
+
+			ss++;
+
+		} while (ss < size);
+		if (size < b.size) return true;
+	}
+	return false;
 }
 
+bool Queue::operator>(const Queue& b)
+{
+	if (size >= b.size)
+	{
+		size_t ss = 0;
+
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return false;
+
+			else if (mass[ss] > b.mass[ss]) return true;
+
+			ss++;
+
+		} while (ss < b.size);
+		if (size > b.size) return true;
+	}
+	else if (size < b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return false;
+
+			else if (mass[ss] > b.mass[ss]) return true;
+
+			ss++;
+
+		} while (ss < size);
+	}
+	return false;
+}
+bool Queue::operator==(const Queue& b)
+{
+	if (size == b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] != b.mass[ss]) return false;
+			ss++;
+
+		} while (ss < size);
+		return true;
+	}
+	else return false;
+}
+
+bool Queue::operator!=(const Queue& b)
+{
+	return !(*this == b);
+}
+
+bool Queue::operator<=(const Queue& b)
+{
+	return !(*this > b);
+}
+
+bool Queue::operator>=(const Queue& b)
+{
+	return !(*this < b);
+}
+
+
+#endif

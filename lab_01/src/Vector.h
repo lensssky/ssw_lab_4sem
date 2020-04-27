@@ -1,50 +1,72 @@
+#ifndef Vector_h
+#define Vector_h
 
 #include <iostream>
 using namespace std;
 
-template <class T>
 struct Vector
 {
-
-    int* mass;
-	int size;
-
-	Vector(int nsize)
+	explicit Vector(int nsize)
 	{
-		mass = new int[nsize];
-		size = nsize;
-		for (int i = 0; i < size; i++)
+		if (nsize < 0)
 		{
-			cin >> mass[i];
-			cout << ' ';
+			throw invalid_argument("Neverno");
+		}
+		else
+		{
+			size = nsize;
+			mass = new int[nsize];
 		}
 	};
-	void VectorOut();
-	void VectorPush( int b1);
-	void VectorPop();
-	short VectorPeek();
-	short VectorCount();
-	short &  VectorAt(short c1);
-	void VectorPositive();
-	void VectorRange(int d1, int f1);
-	void VectorComparison(int*& masss, int& size2, int& size);
 
+	Vector()
+	{
+		size = 0;
+		mass = new int[size];
+	}
+
+	~Vector()
+	{
+		delete[] mass;
+	}
+
+
+	void Out();
+	void Push( int b1);
+	void Pop();
+	int Peek();
+	int Count();
+	int & At(size_t index);
+	void Negative();
+	void Range(int d1, int f1);
+	
+
+	bool operator<(const Vector& b); // comparison functions
+	bool operator>(const Vector& b);
+	bool operator==(const Vector& b);
+	bool operator!=(const Vector& b);
+	bool operator<=(const Vector& b);
+	bool operator>=(const Vector& b);
+
+private:
+	int* mass{ nullptr };
+	size_t size{ 0 };
 	
 };
-template <typename T>
-void Vector<T>::VectorOut()
+
+void Vector::Out()
 {
-	for (int i = 0; i < size; i++)
+	for (size_t i = 0; i < size; i++)
 	{
 		cout << mass[i] << " ";
 	}
 	cout << endl;
 };
-template <typename T>
-void Vector <T>::VectorPush( int b1)
+void Vector::Push( int b1)
 {
-	int* newMass = new int[size + 1];
-	for (int i = 0; i < size; i++)
+
+	auto* newMass = new int[size + 1];
+	for (size_t i = 0; i < size; i++)
 	{
 		newMass[i] = mass[i];
 	}
@@ -53,45 +75,62 @@ void Vector <T>::VectorPush( int b1)
 	delete[] mass;
 	mass = newMass;
 }
-template <typename T>
-void Vector <T>::VectorPop()
+void Vector::Pop()
 {
-	size--;
-	int* newMass = new int[size];
-	for (int i = 0; i < size; i++)
+	if (size <= 0)
 	{
-		newMass[i] = mass[i];
+		throw out_of_range("Neverno");
 	}
-	delete[] mass;
-	mass = newMass;
+	else
+	{
+		size--;
+		auto* newMass = new int[size];
+		for (size_t i = 0; i < size; i++)
+		{
+			newMass[i] = mass[i];
+		}
+		delete[] mass;
+		mass = newMass;
+	}
 }
-template <typename T>
-short Vector <T>::VectorPeek()
+int Vector::Peek()
 {
-	return mass[size-1];
+	if (size > 0)
+	{
+		return mass[size - 1];
+	}
+	else
+	{
+		throw out_of_range("Neverno");
+	}
 }
-template <typename T>
-short Vector <T>::VectorCount()
+int Vector::Count()
 {
 	return size;
 }
-template <typename T>
-short & Vector <T>::VectorAt(short c1)
+
+int & Vector::At(size_t index)
 {
-	return (short&)mass[c1-1 ];
+	 if ((index < 0) && (index >= size))
+	 {
+		 throw out_of_range("Neverno");
+	 }
+	 else
+	 {
+		 return mass[index];
+	 }
 }
-template <typename T>
-void Vector <T>::VectorPositive()
+void Vector::Negative()
 {
-	int s = 0;
-	int z = 0;
-	for (int i = 0; i < size; i++)
+	size_t s = 0;
+	size_t z = 0;
+	for (size_t i = 0; i < size; i++)
 	{
 		if  (mass[i] < 0) s++;
 	}
 
-	int* newMass = new int[size-s];
-	for (int i = 0; i < size; i++)
+	auto* newMass = new int[size-s];
+	for (size_t i = 0; i < size; i++)
 	{
 		
 		if (mass[i] > 0)
@@ -104,33 +143,127 @@ void Vector <T>::VectorPositive()
 	mass = newMass;
 	size = size - s;
 }
-template <typename T>
-void Vector <T>::VectorRange( int d1, int f1)
+void Vector::Range (int left, int right)
 {
-	int z = 0;
-	size =  (f1 - d1+1);
-	int* newMass = new int[size];
-	for (int i = d1-1; i < size; i++)
+	size_t RangeCount = 0;
+	size_t z = 0;
+	for (size_t i = 0; i < size; i++)
 	{
-
-			newMass[z] = mass[i];
+		if ((mass[i] >= left) && (mass[i] <= right))
+		{
+			RangeCount++;
+		}
+	}
+	size -= RangeCount;
+	auto* newMass = new int[size];
+	for (size_t i = 0; i < size; i++)
+	{
+		if ((mass[i + z] >= left) && (mass[i + z] <= right))
+		{
 			z++;
-	
+			i--;
+		}
+		else
+			newMass[i] = mass[i + z];
+
 	}
 	delete[] mass;
 	mass = newMass;
 }
-template <typename T>
-void Vector <T>::VectorComparison(int*& masss, int& size2, int& size)
+bool Vector::operator<(const Vector& b)
 {
-	
-	if (size > size2) size = size2;
-	int q = size;
-	int w = size;
-	for (int i = size - 1; i >=0; i--)
-		if (mass[i] > masss[i]) q = i;
-			else if (mass[i] < masss[i]) w=i;
-	if ((q == size) and (w == size)) cout << "Ravno";
-	else if (q < w) cout << "1 bolshe";
-	else cout << "2 bolshe";
+	if (size > b.size)
+	{
+		size_t ss = 0;
+
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return true;
+
+			else if (mass[ss] > b.mass[ss]) return false;
+
+			ss++;
+
+		} while (ss < b.size);
+	}
+	else if (size <= b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return true;
+
+			if (mass[ss] > b.mass[ss]) return false;
+
+			ss++;
+
+		} while (ss < size);
+		if (size < b.size) return true;
+	}
+	return false;
 }
+
+bool Vector::operator>(const Vector& b)
+{
+	if (size >= b.size)
+	{
+		size_t ss = 0;
+
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return false;
+
+			else if (mass[ss] > b.mass[ss]) return true;
+
+			ss++;
+
+		} while (ss < b.size);
+		if (size > b.size) return true;
+	}
+	else if (size < b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return false;
+
+			else if (mass[ss] > b.mass[ss]) return true;
+
+			ss++;
+
+		} while (ss < size);
+	}
+	return false;
+}
+bool Vector::operator==(const Vector& b)
+{
+	if (size == b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] != b.mass[ss]) return false;
+			ss++;
+
+		} while (ss < size);
+		return true;
+	}
+	else return false;
+}
+
+bool Vector::operator!=(const Vector& b)
+{
+	return !(*this == b);
+}
+
+bool Vector::operator<=(const Vector& b)
+{
+	return !(*this > b);
+}
+
+bool Vector::operator>=(const Vector& b)
+{
+	return !(*this < b);
+}
+
+#endif

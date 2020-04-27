@@ -1,50 +1,74 @@
+#ifndef Stack_h
+#define Stack_h
 
 #include <iostream>
 using namespace std;
 
-template <class T>
+
 struct Stack
 {
-
-	int* mass;
-	int size;
-
-	Stack(int nsize)
+	explicit Stack(int nsize)
 	{
-		mass = new int[nsize];
-		size = nsize;
-		for (int i = 0; i < size; i++)
+		if (nsize < 0)
 		{
-			cin >> mass[i];
-			cout << ' ';
+			throw invalid_argument("Neverno");
+		}
+		else
+		{
+			size = nsize;
+			mass = new int[nsize];
 		}
 	};
-	void StackOut();
-	void StackPush( int b1);
-	void StackPop();
-	short StackPeek();
-	short StackCount();
-	void StackPositive();
-	void StackRange( int d1, int f1);
-	void StackComparison(int*& masss, int& size2, int& size);
+
+	Stack()
+	{
+		size = 0;
+		mass = new int[size];
+	}
+
+	~Stack()
+	{
+		delete[] mass;
+	}
+
+
+	void Out();
+	void Push( int b1);
+	void Pop();
+	short Peek();
+	short Count();
+	void Negative();
+	void Range( int d1, int f1);
+
+	bool operator<(const Stack& b); // comparison functions
+	bool operator>(const Stack& b);
+	bool operator==(const Stack& b);
+	bool operator!=(const Stack& b);
+	bool operator<=(const Stack& b);
+	bool operator>=(const Stack& b);
+	
+
+private:
+	int* mass{ nullptr };
+	size_t size{ 0 };
 
 
 };
-template <typename T>
-void Stack<T>::StackOut()
+
+void Stack::Out()
 {
-	for (int i = 0; i < size; i++)
+	for (size_t i = 0; i < size; i++)
 	{
 		cout << mass[i] << " ";
 	}
 	cout << endl;
 };
-template <typename T>
-void Stack <T>::StackPush( int b1)
+
+void Stack::Push( int b1)
 {
 	size++;
-	int* newMass = new int[size];
-	for (int i = 0; i < size-1; i++)
+	auto* newMass = new int[size];
+	for (size_t i = 0; i < size-1; i++)
 	{
 		newMass[i] = mass[i];
 	}
@@ -52,40 +76,54 @@ void Stack <T>::StackPush( int b1)
 	delete[] mass;
 	mass = newMass;
 }
-template <typename T>
-void Stack <T>::StackPop()
+
+void Stack::Pop()
 {
-	size--;
-	int* newMass = new int[size];
-	for (int i = 0; i < size; i++)
+	if (size <= 0)
 	{
-		newMass[i] = mass[i];
+		throw out_of_range("Neverno");
 	}
-	delete[] mass;
-	mass = newMass;
+	else
+	{
+		size--;
+		auto* newMass = new int[size];
+		for (size_t i = 0; i < size; i++)
+		{
+			newMass[i] = mass[i];
+		}
+		delete[] mass;
+		mass = newMass;
+	}
 }
-template <typename T>
-short Stack <T>::StackPeek()
+
+short Stack::Peek()
 {
-	return mass[size - 1];
+	if (size > 0)
+	{
+		return mass[size - 1];
+	}
+	else
+	{
+		throw out_of_range("Neverno");
+	}
 }
-template <typename T>
-short Stack <T>::StackCount()
+
+short Stack::Count()
 {
 	return size;
 }
-template <typename T>
-void Stack <T>::StackPositive()
+
+void Stack::Negative()
 {
-	int s = 0;
-	int z = 0;
-	for (int i = 0; i < size; i++)
+	size_t s = 0;
+	size_t z = 0;
+	for (size_t i = 0; i < size; i++)
 	{
 		if (mass[i] < 0) s++;
 	}
 
-	int* newMass = new int[size - s];
-	for (int i = 0; i < size; i++)
+	auto* newMass = new int[size - s];
+	for (size_t i = 0; i < size; i++)
 	{
 
 		if (mass[i] > 0)
@@ -98,34 +136,129 @@ void Stack <T>::StackPositive()
 	mass = newMass;
 	size = size - s;
 }
-template <typename T>
-void Stack <T>::StackRange( int d1, int f1)
-{
-	int z = 0;
-	size = (f1 - d1 + 1);
-	int* newMass = new int[size];
-	for (int i = d1 - 1; i < size; i++)
-	{
 
-		newMass[z] = mass[i];
-		z++;
+void Stack::Range( int left, int right)
+{
+	size_t RangeCount = 0;
+	size_t z = 0;
+	for (size_t i = 0; i < size; i++)
+	{
+		if ((mass[i] >= left) && (mass[i] <= right))
+		{
+			RangeCount++;
+		}
+	}
+	size -= RangeCount;
+	auto* newMass = new int[size];
+	for (size_t i = 0; i < size; i++)
+	{
+		if ((mass[i + z] >= left) && (mass[i + z] <= right))
+		{
+			z++;
+			i--;
+		}
+		else
+			newMass[i] = mass[i + z];
 
 	}
 	delete[] mass;
 	mass = newMass;
 }
-template <typename T>
-void Stack <T>::StackComparison(int*& masss, int& size2, int& size)
+
+bool Stack::operator<(const Stack& b)
 {
-	int q = -1;
-	int w = -1;
-	if (size > size2) size = size2;
-	for (int i = size - 1; i > -1; i--)
-		if (mass[i] > masss[i]) q = i;
-		else if (mass[i] < masss[i]) w = i;
-	if ((q == -1) and (w == -1)) cout << "Ravno";
-	else if (q > w) cout << "1 bolshe";
-	else cout << "2 bolshe";
+	if (size > b.size)
+	{
+		size_t ss = 0;
+
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return true;
+
+			else if (mass[ss] > b.mass[ss]) return false;
+
+			ss++;
+
+		} while (ss < b.size);
+	}
+	else if (size <= b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return true;
+
+			if (mass[ss] > b.mass[ss]) return false;
+
+			ss++;
+
+		} while (ss < size);
+		if (size < b.size) return true;
+	}
+	return false;
 }
 
+bool Stack::operator>(const Stack& b)
+{
+	if (size >= b.size)
+	{
+		size_t ss = 0;
 
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return false;
+
+			else if (mass[ss] > b.mass[ss]) return true;
+
+			ss++;
+
+		} while (ss < b.size);
+		if (size > b.size) return true;
+	}
+	else if (size < b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] < b.mass[ss]) return false;
+
+			else if (mass[ss] > b.mass[ss]) return true;
+
+			ss++;
+
+		} while (ss < size);
+	}
+	return false;
+}
+bool Stack::operator==(const Stack& b)
+{
+	if (size == b.size)
+	{
+		size_t ss = 0;
+		do
+		{
+			if (mass[ss] != b.mass[ss]) return false;
+			ss++;
+
+		} while (ss < size);
+		return true;
+	}
+	else return false;
+}
+
+bool Stack::operator!=(const Stack& b)
+{
+	return !(*this == b);
+}
+
+bool Stack::operator<=(const Stack& b)
+{
+	return !(*this > b);
+}
+
+bool Stack::operator>=(const Stack& b)
+{
+	return !(*this < b);
+}
+
+#endif

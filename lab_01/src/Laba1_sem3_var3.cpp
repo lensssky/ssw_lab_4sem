@@ -12,46 +12,51 @@ using namespace std;
 int main()
 {
 	try {
-
+		
 		using ns = std::chrono::nanoseconds;
-
-		Stack <int> stack1(5);
+		Stack stack1;
 		std::stack<int> stack2;
-		Queue <int> queue1(5);
+		Queue queue1;
 		std::queue<int> queue2;
-		Vector <int> vector1(5);
+		Vector vector1;
 		std::vector<int> vector2;
 
 		cout << endl;
 		cout << "\t\t\tPerformance comparison results" << endl;
-		cout << "\t\t\t (all results in nanoseconds)" << endl << endl;
-		cout << "type\t\t" << "push\t\t" << "pop\t\t" << "peek\t\t" << "count\t\t" << "at" << endl;
+		cout << "\t\t\t  (all results in nanoseconds)\n" << endl;
+		cout << "type\t\t" << "push\t\t\t" << "pop\t\t\t" << "peek\t\t" << "count\t\t" << "at" << endl;
 		cout << "My stack\t";
 
-		////////// STACK CHECK ///////////// 
+	////////// STACK CHECK /////////////
 
 		auto start = std::chrono::high_resolution_clock::now();
-		stack1.StackPush(99);
+		for (int i = 0; i < 10000; i++)
+		{
+			stack1.Push(i);
+		}
 		auto end = std::chrono::high_resolution_clock::now();
 		auto res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		stack1.StackPop();
+		for (int i = 0; i < 10000; i++)
+		{
+			stack1.Pop();
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
-		stack1.StackPush(23);
+		stack1.Push(23);
 
 		start = std::chrono::high_resolution_clock::now();
-		stack1.StackPeek();
+		stack1.Peek();
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		stack1.StackCount();
+		stack1.Count();
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
@@ -60,16 +65,22 @@ int main()
 		cout << "STL stack\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		stack2.push(99);
+		for (int i = 0; i < 10000; i++)
+		{
+			stack2.push(99);
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
+		cout << res << "\t\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		stack2.pop();
+		for (int i = 0; i < 10000; i++)
+		{
+			stack2.pop();
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
+		cout << res << "\t\t\t";
 
 		stack2.push(23);
 
@@ -88,29 +99,37 @@ int main()
 		cout << res << "\t\t";
 		cout << "----" << endl;
 
-		////////// QUEUE CHECK ///////////// 
+	////////// QUEUE CHECK /////////////
 
-		cout << endl << "my_queue\t";
+		cout << "\nmy_queue\t";
 		start = std::chrono::high_resolution_clock::now();
-		queue1.QueuePush(3);
+		for (int i = 0; i < 10000; i++)
+		{
+			queue1.Push(i);
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		queue1.QueuePop();
+		for (int i = 0; i < 10000; i++)
+		{
+			queue1.Pop();
+		}
+		end = std::chrono::high_resolution_clock::now();
+		res = std::chrono::duration_cast<ns>(end - start).count();
+		cout << res << "\t\t";
+
+		queue1.Push(55);
+
+		start = std::chrono::high_resolution_clock::now();
+		queue1.Peek();
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		queue1.QueuePeek();
-		end = std::chrono::high_resolution_clock::now();
-		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
-
-		start = std::chrono::high_resolution_clock::now();
-		queue1.QueueCount();
+		queue1.Count();
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
@@ -119,24 +138,28 @@ int main()
 		cout << "STL queue\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		queue2.push(2);
+		for (int i = 0; i < 10000; i++)
+		{
+			queue2.push(i);
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
+		cout << res << "\t\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		queue2.pop();
+		for (int i = 0; i < 10000; i++)
+		{
+			queue2.pop();
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
+		cout << res << "\t\t\t";
 
 		queue2.push(22);
 
 		start = std::chrono::high_resolution_clock::now();
 		queue2.front();
-		end =
-
-			std::chrono::high_resolution_clock::now();
+		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
@@ -147,38 +170,46 @@ int main()
 		cout << res << "\t\t";
 		cout << "----" << endl;
 
-		////////// VECTOR CHECK ///////////// 
+	////////// VECTOR CHECK /////////////
 
-		cout << endl << "my_vector\t";
+		cout << "\nmy_vector\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		vector1.VectorPush(22);
+		for (int i = 0; i < 10000; i++)
+		{
+			vector1.Push(i);
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		vector1.VectorPop();
+		for (int i = 0; i < 10000; i++)
+		{
+			vector1.Pop();
+		}
+		end = std::chrono::high_resolution_clock::now();
+		res = std::chrono::duration_cast<ns>(end - start).count();
+		cout << res << "\t\t";
+
+		vector1.Push(21);
+
+		start = std::chrono::high_resolution_clock::now();
+		vector1.Peek();
+		end = std::chrono::high_resolution_clock::now();
+		res = std::chrono::duration_cast<ns>(end - start).count();
+		cout << res << "\t\t";
+
+
+
+		start = std::chrono::high_resolution_clock::now();
+		vector1.Count();
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		vector1.VectorPeek();
-		end = std::chrono::high_resolution_clock::now();
-		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
-
-		vector1.VectorPush(22);
-
-		start = std::chrono::high_resolution_clock::now();
-		vector1.VectorCount();
-		end = std::chrono::high_resolution_clock::now();
-		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
-
-		start = std::chrono::high_resolution_clock::now();
-		vector1.VectorAt(0) = 1;
+		vector1.At(0) = 1;
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t" << endl;
@@ -186,16 +217,22 @@ int main()
 		cout << "STL vector\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		vector2.push_back(22);
+		for (int i = 0; i < 10000; i++)
+		{
+			vector2.push_back(i);
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
+		cout << res << "\t\t\t";
 
 		start = std::chrono::high_resolution_clock::now();
-		vector2.pop_back();
+		for (int i = 0; i < 10000; i++)
+		{
+			vector2.pop_back();
+		}
 		end = std::chrono::high_resolution_clock::now();
 		res = std::chrono::duration_cast<ns>(end - start).count();
-		cout << res << "\t\t";
+		cout << res << "\t\t\t";
 		cout << "----" << "\t\t";
 
 
@@ -213,12 +250,12 @@ int main()
 		res = std::chrono::duration_cast<ns>(end - start).count();
 		cout << res << "\t\t";
 		cout << endl;
-
 	}
 	catch (const std::exception & exp)
 	{
 		cout << exp.what() << endl;
 	}
+
 
 	return 0;
 }
