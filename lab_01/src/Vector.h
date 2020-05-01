@@ -39,6 +39,7 @@ struct Vector
 	int & At(size_t index);
 	void Negative();
 	void Range(int d1, int f1);
+	void Fill();
 	
 
 	bool operator<(const Vector& b); // comparison functions
@@ -53,6 +54,15 @@ private:
 	size_t size{ 0 };
 	
 };
+
+void Vector::Fill()
+{
+
+	for (size_t i = 0; i < size; i++)
+	{
+		cin >> mass[i];
+	}
+}
 
 void Vector::Out()
 {
@@ -109,7 +119,7 @@ int Vector::Count()
 	return size;
 }
 
-int & Vector::At(size_t index)
+int & Vector::At(int index)
 {
 	 if ((index < 0) && (index >= size))
 	 {

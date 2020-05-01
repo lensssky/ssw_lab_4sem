@@ -35,10 +35,11 @@ struct Stack
 	void Out();
 	void Push( int b1);
 	void Pop();
-	short Peek();
-	short Count();
+	int Peek();
+	int Count();
 	void Negative();
 	void Range( int d1, int f1);
+	void Fill();
 
 	bool operator<(const Stack& b); // comparison functions
 	bool operator>(const Stack& b);
@@ -54,6 +55,15 @@ private:
 
 
 };
+
+void Stack::Fill()
+{
+
+	for (size_t i = 0; i < size; i++)
+	{
+		cin >> mass[i];
+	}
+}
 
 void Stack::Out()
 {
@@ -96,7 +106,7 @@ void Stack::Pop()
 	}
 }
 
-short Stack::Peek()
+int Stack::Peek()
 {
 	if (size > 0)
 	{
@@ -108,7 +118,7 @@ short Stack::Peek()
 	}
 }
 
-short Stack::Count()
+int Stack::Count()
 {
 	return size;
 }

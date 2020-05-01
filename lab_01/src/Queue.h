@@ -37,6 +37,7 @@ struct Queue
 	int Count();
 	void Negative();
 	void Range(int d1, int f1);
+	void Fill();
 
 
 	bool operator<(const Queue& b); // comparison functions
@@ -51,6 +52,14 @@ private:
 	size_t size{ 0 };
 
 };
+void Queue::Fill()
+{
+
+	for (size_t i = 0; i < size; i++)
+	{
+		cin >> mass[i];
+	}
+}
 
 void Queue::Out()
 {
