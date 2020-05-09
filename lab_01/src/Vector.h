@@ -119,9 +119,9 @@ int Vector::Count()
 	return size;
 }
 
-int & Vector::At(int index)
+int & Vector::At(size_t index)
 {
-	 if ((index < 0) && (index >= size))
+	 if ((index < 0) || (index >= size))
 	 {
 		 throw out_of_range("Neverno");
 	 }
